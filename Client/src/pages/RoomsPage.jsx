@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import axios from 'axios';
-import RoomCard from '../components/RoomCard';
+import RoomCard from '../components/RoomCard.jsx';
 
 const RoomsPage = () => {
   const [rooms, setRooms] = useState([]);
@@ -13,7 +13,9 @@ const RoomsPage = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/rooms');
+        // Use environment variable for the API URL
+        const url = `${import.meta.env.VITE_API_URL}/api/rooms`;
+        const res = await axios.get(url);
         setRooms(res.data);
       } catch (err) {
         setError('Could not fetch rooms. Please try again later.');
@@ -22,9 +24,8 @@ const RoomsPage = () => {
         setLoading(false);
       }
     };
-
     fetchRooms();
-  }, []); // The empty dependency array means this runs once on component mount
+  }, []);
 
   if (loading) return <p>Loading rooms...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
